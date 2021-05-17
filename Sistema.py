@@ -11,7 +11,7 @@ sistema = True
 
 usuario_sessao_cpf = str
 
-#Veificar o tamanh da senha
+#Veificar o tamanho da senha
 def validaSenha(senha):
     if len(senha) != 6:
         return False
@@ -81,12 +81,12 @@ def mostrarCarrinho(cpf):
     cliente = retornaCliente(cpf)
     #Verifica Se tem itens no carrinho
     if(len(cliente["compras"]) == 0):
-        return input("Carrinho Vazio \nPrecione enter para voltar para o menu de opções:")
+        return input("Carrinho Vazio \nPressione enter para voltar para o menu de opções:")
     #Mostrar todos os itens do carrinho e soma o total
     for compra in cliente["compras"]:
         total +=compra["preco"]
         print(compra["codigo"]+" - "+compra["nome"]+" -R$ = "+str(compra["preco"])+".\n") 
-    print("Total:R$= "+str(total)+"\nPrecione enter para voltar para o menu de opções:")
+    print("Total:R$= "+str(total)+"\nPressione enter para voltar para o menu de opções:")
     return input()
 
 #Valida se o usuário tem limite para adicioar o produto ao carrinho
@@ -107,22 +107,22 @@ def compraProduto(cpf, codigo, quantidade):
     for i in range(1, int(quantidade) +1):
         #Valida se tem saldo para adicionar ao carrinho
         if(not validaLimite(clienteSessao, produtoCompra)):
-            return input("Não foi possível adicionar todos os itens ao carrinho. Verifique seu Carrinho para saber Quantos puderam entrar por conta do seu Limite")
+            return input("Não foi possível adicionar todos os itens ao carrinho. Verifique seu Carrinho para saber quantos puderam entrar por conta do seu Limite")
         clienteSessao["compras"].append(produtoCompra)
         clienteSessao["limite"] -= produtoCompra["preco"]
-    return input("Produto adicionado ao carrinho pressione enter para proceguir:")
+    return input("Produto adicionado ao carrinho pressione enter para prosseguir:")
 
 def mostraProdutos(cpf):
     print("\n Lista de Compras \n")
     #Percorre a Lista de Compras e Mostra os dados de cada Produto
     for produto in lista_de_produtos:
-        print(produto["codigo"]+" - "+produto["nome"]+" -R$= "+str(produto["preco"])+".\n")
+        print(produto["codigo"]+" - "+produto["nome"]+" -R$ "+str(produto["preco"])+".\n")
     #Verifica se o usuário quer realizar alguma compra
     comprar = input("Deseja Comprar algum produto [S ou N]? ")
     if(comprar == "S" or comprar == "s"):
         codigo,quantidade = map(str, input("Digite o Codigo do produto e a quantidade separados por Virgula.\n").split(","))
         compraProduto(cpf, codigo, quantidade)
-    print("Obrigado pela Preferência:\n\nPrecione enter para voltar para o menu de opções:")   
+    print("Obrigado pela Preferência:\n\nPressione enter para voltar para o menu de opções:")   
     return input()
 
 def listaUsuarios():
@@ -137,7 +137,7 @@ def pagarFatura(cpf):
     #Calcula o total da fatura
     for compra in clienteFatura["compras"]:
         total +=compra["preco"]
-    pagar = input("Total da sua Fatura: "+str(total)+"\n Desejar Pagar ela [S ou N]?")
+    pagar = input("Total da compra: "+str(total)+"\n Desejar pagar a fatura? [S ou N]")
     #Limpa o carriho e retorna o limite para 1000
     if(pagar == "S" or pagar == "s"):
         clienteFatura["compras"] = list()
