@@ -2,7 +2,7 @@
 import os
 
 #Lista de produtos, querendo aumentar é só cadastrar
-lista_de_produtos = [{"codigo": "1", "nome": "Pasta de Dente", "preco": int(5.00)}, {"codigo": "2", "nome": "Arroz 5Kg", "preco": int(10)},{"codigo": "3", "nome": "Feijão", "preco": int(4.00)}, {"codigo": "4", "nome": "Açucar 1Kg", "preco": int(2.00)}, {"codigo": "6", "nome": "Educaão", "preco": int(500.00)}]
+lista_de_produtos = [{"codigo": "1", "nome": "Pasta de Dente", "preco": int(5.00)}, {"codigo": "2", "nome": "Arroz 5Kg", "preco": int(10)},{"codigo": "3", "nome": "Feijão", "preco": int(4.00)}, {"codigo": "4", "nome": "Açucar 1Kg", "preco": int(2.00)}, {"codigo": "5", "nome": "Sabonete", "preco": int(1.50)}, {"codigo":"6", "nome": "Shampoo", "preco": int(5.00)}, {"codigo":"7", "nome": "Mortadela", "preco": int(15.00)}, {"codigo":"8", "nome": "Café", "preco": int(4.50)}, {"codigo":"9", "nome": "Iogurte", "preco": int(6.00)}, {"codigo":"10", "nome": "Detergente", "preco": int(2.00)}, {"codigo":"11", "nome": "Bolacha Salgada", "preco": int(5.50)}, {"codigo":"12", "nome": "Fermento", "preco": int(4.00)}, {"codigo":"13", "nome": "Fraldas", "preco": int(25.00)}, {"codigo":"14", "nome": "Escova de dente", "preco": int(8.00)}, {"codigo":"15", "nome": "Sal", "preco": int(3.00)}, {"codigo":"16", "nome": "Farinha de Trigo 5 KG", "preco": int(15.00)}, {"codigo":"17", "nome": "Amaciante 5L", "preco": int(20.00)}, {"codigo":"18", "nome": "lâmpada", "preco": int(5.00)}, {"codigo":"19", "nome": "Molho de tomate", "preco": int(1.50)}, {"codigo":"20", "nome": "Macarrão 500g", "preco": int(3.50)}]
 
 lista_de_clientes = []
 
@@ -61,13 +61,13 @@ def clienteInsert():
     cliente['senha'] = senha
     cliente['email'] = email
     lista_de_clientes.append(cliente)
-    return input("Cliente Adicionado")
+    return input("Cliente Adicionado pressione enter para prosseguir:")
 
 def buscarCliente(cpf):
     #Percorre a Lista de Clientes em busca do CPF Em questão.
     for cliente in lista_de_clientes:
         if(cliente["cpf"] == cpf):
-            return input("Nome: "+cliente["nome"]+". Email: " + cliente["email"]+"\n")
+            return input("Nome: "+cliente["nome"]+". Email: " + cliente["email"]+"\nPrecione enter para voltar para o menu de opções:")
     return input("Cliente não Encontrado")
 
 def retornaCliente(cpf):
@@ -85,8 +85,8 @@ def mostrarCarrinho(cpf):
     #Mostrar todos os itens do carrinho e soma o total
     for compra in cliente["compras"]:
         total +=compra["preco"]
-        print(compra["codigo"]+" - "+compra["nome"]+" - "+str(compra["preco"])+".\n") 
-    print("Total: "+str(total)+"\n")
+        print(compra["codigo"]+" - "+compra["nome"]+" -R$ = "+str(compra["preco"])+".\n") 
+    print("Total:R$= "+str(total)+"\nPrecione enter para voltar para o menu de opções:")
     return input()
 
 #Valida se o usuário tem limite para adicioar o produto ao carrinho
@@ -110,26 +110,26 @@ def compraProduto(cpf, codigo, quantidade):
             return input("Não foi possível adicionar todos os itens ao carrinho. Verifique seu Carrinho para saber Quantos puderam entrar por conta do seu Limite")
         clienteSessao["compras"].append(produtoCompra)
         clienteSessao["limite"] -= produtoCompra["preco"]
-    return input("Produto adicionado ao carrinho")
+    return input("Produto adicionado ao carrinho pressione enter para proceguir:")
 
 def mostraProdutos(cpf):
     print("\n Lista de Compras \n")
     #Percorre a Lista de Compras e Mostra os dados de cada Produto
     for produto in lista_de_produtos:
-        print(produto["codigo"]+" - "+produto["nome"]+" - "+str(produto["preco"])+".\n")
+        print(produto["codigo"]+" - "+produto["nome"]+" -R$= "+str(produto["preco"])+".\n")
     #Verifica se o usuário quer realizar alguma compra
     comprar = input("Deseja Comprar algum produto [S ou N]? ")
     if(comprar == "S" or comprar == "s"):
         codigo,quantidade = map(str, input("Digite o Codigo do produto e a quantidade separados por Virgula.\n").split(","))
         compraProduto(cpf, codigo, quantidade)
-    print("Obrigado pela Preferência")   
+    print("Obrigado pela Preferência:\n\nPrecione enter para voltar para o menu de opções:")   
     return input()
 
 def listaUsuarios():
     #Retorna todos os usuário do sistema, informando Nome e Email
     for usuario in lista_de_clientes:
         print("Nome: "+usuario["nome"]+". Email: "+usuario["email"]+".\n")
-    return input("Pressione Enter para voltar ao menu de ações")
+    return input("Pressione Enter para voltar ao menu de opções")
 
 def pagarFatura(cpf):
     total = 0
@@ -142,7 +142,7 @@ def pagarFatura(cpf):
     if(pagar == "S" or pagar == "s"):
         clienteFatura["compras"] = list()
         clienteFatura["limite"] = int(1000)
-        return input("Pagamento realizado, limite liberado")    
+        return input("Pagamento realizado, limite liberado\nPressione enter para voltar para o menu de opções:")    
 
 #Valida A troca de usuário da Sessão
 def trocaUsuario(cpf, senha):
@@ -190,11 +190,11 @@ usuario_sessao_cpf = lista_de_clientes[0]["cpf"]
 while(sistema):
     #Verifica se o usuário quer continuar usando
     if(acoes(usuario_sessao_cpf) == -1):
-        input("Adeus")
+        input("Sessão Finalizada, Volte Sempre:")
         break
     #troca o cliente da sessão
     elif(acoes(usuario_sessao_cpf) == 1):
-        cpfTroca, senha = map(str, input("Digite o CPF do usuário a entrar na Sessão e a Senha \n").split(","))
+        cpfTroca, senha = map(str, input("Digite o CPF do usuário a entrar na Sessão, e Senha separados por virgula: \n").split(","))
         cliente = trocaUsuario(cpfTroca, senha)
         usuario_sessao_cpf = cliente["cpf"]
-        input("Cliente Trocado")
+        input("Cliente Trocado\nPressione enter para voltar para o menu de opções")
