@@ -54,7 +54,7 @@ def clienteInsert():
     elif (not cpf_valido(cpf)):
         return input("CPF Inválido, por favor digite um válido\n")
     elif(not validaSenha(senha)):
-        return input("A senha precisa ter 6 digitos\n")
+        return input("A senha precisa ter 6 digitos\nPressione enter para refazer o cadastro")
     cliente = {'nome': str, 'cpf': str, 'senha': str, 'email': str, "limite": int(1000), "compras": list()}
     cliente['nome'] = nome
     cliente['cpf'] = cpf
@@ -67,13 +67,20 @@ def buscarCliente(cpf):
     #Percorre a Lista de Clientes em busca do CPF Em questão.
     for cliente in lista_de_clientes:
         if(cliente["cpf"] == cpf):
-            return input("Nome: "+cliente["nome"]+". Email: " + cliente["email"]+"\nPrecione enter para voltar para o menu de opções:")
-    return input("Cliente não Encontrado")
+            return input("Nome: "+cliente["nome"]+". Email: " + cliente["email"]+"\nPressione enter para voltar para o menu de opções:")
+    return input("Cliente não Encontrado\nPressione enter para voltar para o menu de opções")
 
 def retornaCliente(cpf):
     for cliente in lista_de_clientes:
         if(cliente["cpf"] == cpf):
             return cliente
+    return -1;
+
+#Mostra os dados do usuário que esta na sessão
+def usuarioAtual(cpf):
+    cliente = retornaCliente(cpf)
+    print("Nome: "+cliente["nome"]+".\nEmail: "+cliente["email"])
+    return input("Precione Enter para prosseguir")
 
 def mostrarCarrinho(cpf):
     total = 0
@@ -81,12 +88,12 @@ def mostrarCarrinho(cpf):
     cliente = retornaCliente(cpf)
     #Verifica Se tem itens no carrinho
     if(len(cliente["compras"]) == 0):
-        return input("Carrinho Vazio \nPrecione enter para voltar para o menu de opções:")
+        return input("Carrinho Vazio \nPressione enter para voltar para o menu de opções:")
     #Mostrar todos os itens do carrinho e soma o total
     for compra in cliente["compras"]:
         total +=compra["preco"]
         print(compra["codigo"]+" - "+compra["nome"]+" -R$ = "+str(compra["preco"])+".\n") 
-    print("Total:R$= "+str(total)+"\nPrecione enter para voltar para o menu de opções:")
+    print("Total:R$= "+str(total)+"\nPressione enter para voltar para o menu de opções:")
     return input()
 
 #Valida se o usuário tem limite para adicioar o produto ao carrinho
@@ -107,10 +114,10 @@ def compraProduto(cpf, codigo, quantidade):
     for i in range(1, int(quantidade) +1):
         #Valida se tem saldo para adicionar ao carrinho
         if(not validaLimite(clienteSessao, produtoCompra)):
-            return input("Não foi possível adicionar todos os itens ao carrinho. Verifique seu Carrinho para saber Quantos puderam entrar por conta do seu Limite")
+            return input("Não foi possível adicionar todos os itens ao carrinho.Precione enter e Verifique seu Carrinho para saber Quantos puderam entrar por conta do seu Limite\n")
         clienteSessao["compras"].append(produtoCompra)
         clienteSessao["limite"] -= produtoCompra["preco"]
-    return input("Produto adicionado ao carrinho pressione enter para proceguir:")
+    return input("Produto adicionado ao carrinho pressione enter para prosseguir:")
 
 def mostraProdutos(cpf):
     print("\n Lista de Compras \n")
@@ -118,7 +125,7 @@ def mostraProdutos(cpf):
     for produto in lista_de_produtos:
         print(produto["codigo"]+" - "+produto["nome"]+" -R$= "+str(produto["preco"])+".\n")
     #Verifica se o usuário quer realizar alguma compra
-    comprar = input("Deseja Comprar algum produto [S ou N]? ")
+    comprar = input("Deseja Comprar algum produto [S ou N]? \n")
     if(comprar == "S" or comprar == "s"):
         codigo,quantidade = map(str, input("Digite o Codigo do produto e a quantidade separados por Virgula.\n").split(","))
         compraProduto(cpf, codigo, quantidade)
@@ -129,7 +136,7 @@ def listaUsuarios():
     #Retorna todos os usuário do sistema, informando Nome e Email
     for usuario in lista_de_clientes:
         print("Nome: "+usuario["nome"]+". Email: "+usuario["email"]+".\n")
-    return input("Pressione Enter para voltar ao menu de opções")
+    return input("Pressione Enter para voltar ao menu de opções\n")
 
 def pagarFatura(cpf):
     total = 0
@@ -137,7 +144,7 @@ def pagarFatura(cpf):
     #Calcula o total da fatura
     for compra in clienteFatura["compras"]:
         total +=compra["preco"]
-    pagar = input("Total da sua Fatura: "+str(total)+"\n Desejar Pagar ela [S ou N]?")
+    pagar = input("Total da sua Fatura: "+str(total)+"\n Desejar Pagar ela [S ou N]?\n")
     #Limpa o carriho e retorna o limite para 1000
     if(pagar == "S" or pagar == "s"):
         clienteFatura["compras"] = list()
@@ -147,9 +154,12 @@ def pagarFatura(cpf):
 #Valida A troca de usuário da Sessão
 def trocaUsuario(cpf, senha):
     cliente = retornaCliente(cpf)
-    if(cliente["senha"] == senha):
+    #Se não achar o usuário retorna -1 para informar o erro
+    if(cliente == -1):
+        return -1
+    elif(cliente["senha"] == senha):
         return cliente;
-    return input("Senha incorreta")
+    return input("Senha incorreta\nPressione enter para refazer")
 
 #acões do sistema
 def acoes(cpf):
@@ -157,7 +167,7 @@ def acoes(cpf):
     os.system("clear")
 
     #Mostra as opçoes de ações do sistema
-    escolha = int(input("Escolha uma Opção: \n 1 - Mostrar Lista de Produtos. \n 2 - Cadastrar Novo Cliente. \n 3 - Verificar Carrinho de Compras.\n 4 - Lista de usuários.\n 5 - Pagar a Fatura. \n 6 - Buscar Cliente Por CPF.\n 7 - Trocar Usuário \n 0 - Sair do Sistema \n"))
+    escolha = int(input("Escolha uma Opção: \n 1 - Mostrar Lista de Produtos. \n 2 - Cadastrar Novo Cliente. \n 3 - Verificar Carrinho de Compras.\n 4 - Lista de usuários.\n 5 - Pagar a Fatura. \n 6 - Buscar Cliente Por CPF.\n 7 - Trocar Usuário \n 8 - Usuário Atual \n 0 - Sair do Sistema \n"))
     if(escolha == 1):
         mostraProdutos(cpf)
     elif(escolha == 2):
@@ -173,6 +183,8 @@ def acoes(cpf):
         buscarCliente(cpfBuscar)
     elif(escolha == 7):
         return 1
+    elif(escolha == 8):
+        usuarioAtual(cpf)
     elif(escolha == 0):
         return -1
     else:
@@ -181,7 +193,7 @@ def acoes(cpf):
 
 #primeiro Acesso, obrigatrório a criação de um usuário
 while(len(lista_de_clientes)== 0):
-        print("Primeiro Cliente, por favor se cadastre.")
+        print("Primeiro Acesso, por favor se cadastre.")
         clienteInsert()
         os.system("clear")
 
@@ -194,7 +206,10 @@ while(sistema):
         break
     #troca o cliente da sessão
     elif(acoes(usuario_sessao_cpf) == 1):
-        cpfTroca, senha = map(str, input("Digite o CPF do usuário a entrar na Sessão, e Senha separados por virgula: \n").split(","))
+        cpfTroca, senha = map(str, input("Digite o CPF do usuário a entrar na Sessão e a Senha \n").split(","))
         cliente = trocaUsuario(cpfTroca, senha)
-        usuario_sessao_cpf = cliente["cpf"]
-        input("Cliente Trocado\nPressione enter para voltar para o menu de opções")
+        if(cliente == -1):
+            input("Cliente não encontrado\nPressione enter para prosseguir")
+        else:
+            usuario_sessao_cpf = cliente["cpf"]
+            input("Cliente Trocado\nPressione enter para prosseguir")
